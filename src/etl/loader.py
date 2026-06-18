@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import sqlite3
 
 from src.etl.normaliser import (
     normalize_ticker,
@@ -49,3 +50,33 @@ class ExcelLoader:
             result[file.stem] = self.load_excel(file)
 
         return result
+
+
+def create_database():
+    conn = sqlite3.connect(
+        "data/processed/nifty100.db"
+    )
+
+    conn.execute(
+        "PRAGMA foreign_keys = ON"
+    )
+
+    with open(
+        "db/schema.sql",
+        "r",
+        encoding="utf-8"
+    ) as f:
+        schema = f.read()
+
+    conn.executescript(schema)
+
+    conn.commit()
+    conn.close()
+
+    print(
+        "Database created successfully"
+    )
+
+
+if __name__ == "__main__":
+    create_database()
