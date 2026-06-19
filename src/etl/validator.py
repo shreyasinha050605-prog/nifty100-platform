@@ -43,9 +43,25 @@ class DataValidator:
 
     def export_failures(self, output_path="output/validation_failures.csv"):
 
+        columns = [
+            "rule_id",
+            "severity",
+            "table_name",
+            "company_id",
+            "year",
+            "field_name",
+            "message",
+        ]
+
         rows = [f.to_dict() for f in self.failures]
 
-        pd.DataFrame(rows).to_csv(output_path, index=False)
+        pd.DataFrame(
+            rows,
+            columns=columns
+        ).to_csv(
+            output_path,
+            index=False
+        )
 
     def dq01_company_pk_uniqueness(self, companies_df):
 
@@ -285,7 +301,9 @@ class DataValidator:
 
         for _, row in documents_df.iterrows():
 
-            url = str(row.get("url", "")).strip()
+            url = str(
+                row.get("annual_report", "")
+            ).strip()
 
             if not (url.startswith("http://") or url.startswith("https://")):
 
@@ -380,11 +398,36 @@ class DataValidator:
                 )
 
 
-def get_failures_df(self):
+    def get_failures_df(self):
 
-    return pd.DataFrame([failure.to_dict() for failure in self.failures])
+        return pd.DataFrame([failure.to_dict() for failure in self.failures])
 
 
-def save_failures(self, path="output/validation_failures.csv"):
+    def save_failures(self, path="output/validation_failures.csv"):
 
-    self.get_failures_df().to_csv(path, index=False)
+        columns = [
+            "rule_id",
+            "severity",
+            "table_name",
+            "company_id",
+            "year",
+            "field_name",
+            "message",
+        ]
+
+        df = self.get_failures_df()
+
+        if df.empty:
+            df = pd.DataFrame(columns=columns)
+
+        df.to_csv(path, index=False)
+
+if __name__ == "__main__":
+
+    validator = DataValidator()
+
+    print("Running DQ checks...")
+
+    validator.save_failures()
+
+    print("validation_failures.csv generated")
