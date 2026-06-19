@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS cashflow;
 DROP TABLE IF EXISTS balancesheet;
 DROP TABLE IF EXISTS profitandloss;
 DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS market_cap;
 
 CREATE TABLE companies (
     id TEXT PRIMARY KEY,
@@ -172,6 +173,23 @@ CREATE TABLE peer_groups (
     benchmark_company TEXT,
 
     PRIMARY KEY (company_id, peer_group),
+
+    FOREIGN KEY (company_id)
+        REFERENCES companies(id)
+);
+
+CREATE TABLE market_cap (
+    company_id TEXT NOT NULL,
+    year INTEGER NOT NULL,
+
+    market_cap_crore REAL,
+    enterprise_value_crore REAL,
+    pe_ratio REAL,
+    pb_ratio REAL,
+    ev_ebitda REAL,
+    dividend_yield_pct REAL,
+
+    PRIMARY KEY (company_id, year),
 
     FOREIGN KEY (company_id)
         REFERENCES companies(id)

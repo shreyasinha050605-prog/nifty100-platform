@@ -1,9 +1,8 @@
 venv/
-.env
-
 __pycache__/
 *.pyc
 
-.db
+data/raw/
+data/processed/
 
-.ipynb_checkpoints
+output/*.csv
