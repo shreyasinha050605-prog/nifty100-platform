@@ -134,9 +134,8 @@ Verification performed against the master company table.
 
 Result:
 
-```text
+
 No companies missing P&L records.
-```
 
 Result: PASS
 
